@@ -3,7 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./cinema.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <title>Cinema</title>
   </head>
-  <body></body>
+  <body>
+    <header class="header">
+      <div class="header_from">
+        <div class="icon_block">
+          <img src="./assets/video camera 438839 24526.svg" alt="" />
+          <h1>Movie</h1>
+        </div>
+        <div>
+          <form action="">
+            <input type="text" class="search" placeholder="Search" />
+          </form>
+        </div>
+      </div>
+
+      <section class="navbar">
+        <button class="nav_button moutnh">Премьеры месяца</button>
+        <button class="nav_button waiting">Топ ожидаемых</button>
+        <button class="nav_button reliz">релизы месяца</button>
+        <button class="nav_button top">Топ фильмов</button>
+        <button class="nav_button block">избранные</button>
+      </section>
+    </header>
+
+    <main class="movie"></main>
+    <script src="./cinema.js"></script>
+  </body>
 </html>
