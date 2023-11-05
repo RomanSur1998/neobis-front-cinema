@@ -23,6 +23,7 @@ function getParam(data) {
   }
 }
 Local();
+
 getMovie(API);
 async function getMovie(url) {
   try {
@@ -136,26 +137,32 @@ tops.addEventListener("click", () => {
 });
 
 function Local(elem) {
-  if (!localStorage.getItem("films")) {
-    localStorage.setItem("films", JSON.stringify([]));
-  }
-
-  let data = JSON.parse(localStorage.getItem("films"));
-  const existingFilmIndex = data.findIndex((item) => {
-    if (item.filmId) {
-      return item.filmId === elem.filmId;
-    } else {
-      return item.kinopoiskId === elem.kinopoiskId;
+  if (elem) {
+    if (!localStorage.getItem("films")) {
+      localStorage.setItem("films", JSON.stringify([]));
     }
-  });
 
-  if (existingFilmIndex !== -1) {
-    data.splice(existingFilmIndex, 1);
+    let data = JSON.parse(localStorage.getItem("films"));
+    const existingFilmIndex = data.findIndex((item) => {
+      if (item.filmId) {
+        return item.filmId === elem.filmId;
+      } else {
+        return item.kinopoiskId === elem.kinopoiskId;
+      }
+    });
+
+    if (existingFilmIndex !== -1) {
+      data.splice(existingFilmIndex, 1);
+    } else {
+      data.push(elem);
+    }
+
+    localStorage.setItem("films", JSON.stringify(data));
   } else {
-    data.push(elem);
+    if (!localStorage.getItem("films")) {
+      localStorage.setItem("films", JSON.stringify([]));
+    }
   }
-
-  localStorage.setItem("films", JSON.stringify(data));
 }
 
 waiting.addEventListener("click", () => {
