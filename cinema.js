@@ -22,7 +22,7 @@ function getParam(data) {
     return data.releases;
   }
 }
-
+Local();
 getMovie(API);
 async function getMovie(url) {
   try {
