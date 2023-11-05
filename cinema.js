@@ -11,7 +11,7 @@ const API =
   "https://kinopoiskapiunofficial.tech/api/v2.2/films/top?type=TOP_100_POPULAR_FILMS&page=1";
 const SEARCH_API =
   "https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=";
-const API_KEY = "18995958-3405-4ae8-9084-6a14dfb5cc24";
+const API_KEY = "3d73b662-f1b3-4b82-9e6a-33a349d1d4dd";
 
 function getParam(data) {
   if (data.films) {
@@ -23,7 +23,7 @@ function getParam(data) {
   }
 }
 
-// getMovie(API);
+getMovie(API);
 async function getMovie(url) {
   try {
     const response = await fetch(url, {
@@ -35,7 +35,6 @@ async function getMovie(url) {
     });
     const data = await response.json();
     movieList(getParam(data));
-    console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -45,29 +44,68 @@ function movieList(data) {
   movie.innerHTML = "";
   data.forEach((elem) => {
     let card = document.createElement("div");
-    card.addEventListener("click", () => {
-      Local(elem);
-    });
-    card.className = "movie_card";
+    let block = document.createElement("div");
+    let block_left = document.createElement("div");
+    let block_right = document.createElement("div");
     let image = document.createElement("img");
     let title = document.createElement("h2");
-    title.textContent = elem.nameRu;
-    image.src = elem.posterUrl;
+    let icon = document.createElement("img");
+    let reiting = document.createElement("h4");
+    let year = document.createElement("h4");
+    let genre = document.createElement("h4");
 
-    if (change(elem.filmId)) {
-      card.className = "movie_card favorite";
+    card.className = "flex-colum movie_card";
+    title.textContent = elem.nameRu;
+    title.className = "title";
+    image.src = elem.posterUrl;
+    block.className = "movie_card_block";
+    reiting.textContent = elem.rating;
+    if (elem.rating) {
+      reiting.className = "reiting";
     }
+    block_right.className = "block_right";
+    year.textContent = elem.year;
+    year.className = "yers";
+    genre.textContent = elem.genres[0].genre;
+
+    icon.src = isFavorite(elem)
+      ? "./assets/heart_fill.svg"
+      : "./assets/heart_outline.svg";
+
+    icon.addEventListener("click", () => {
+      toggleFavorite(elem);
+      icon.src = isFavorite(elem)
+        ? "./assets/heart_fill.svg"
+        : "./assets/heart_outline.svg";
+    });
+
     card.appendChild(image);
-    card.appendChild(title);
+    block_left.append(title, year, genre);
+    block_right.append(icon, reiting);
+    block.append(block_left, block_right);
+    card.appendChild(block);
     movie.appendChild(card);
   });
-  getMovie(API);
 }
-console.log(search.value);
 
-function change(elem) {
+function isFavorite(elem) {
   let data = JSON.parse(localStorage.getItem("films"));
-  return data.findIndex((item) => item.filmId === elem) !== -1;
+  return data.findIndex((item) => item.filmId === elem.filmId) !== -1;
+}
+
+function toggleFavorite(elem) {
+  let data = JSON.parse(localStorage.getItem("films"));
+  const existingFilmIndex = data.findIndex(
+    (item) => item.filmId === elem.filmId
+  );
+
+  if (existingFilmIndex !== -1) {
+    data.splice(existingFilmIndex, 1);
+  } else {
+    data.push(elem);
+  }
+
+  localStorage.setItem("films", JSON.stringify(data));
 }
 
 form.addEventListener("submit", (event) => {
@@ -88,9 +126,11 @@ moutnh.addEventListener("click", () => {
 
 relize_for_month.addEventListener("click", () => {
   let newMoutn = new Date().toLocaleString("en-US", { month: "long" });
-  getMovie(`https://kinopoiskapiunofficial.tech/api/v2.1/films/releases?year=${new Date().getFullYear()}&month=${newMoutn}&page=1
-`);
+  getMovie(
+    `https://kinopoiskapiunofficial.tech/api/v2.1/films/releases?year=${new Date().getFullYear()}&month=${newMoutn}&page=1`
+  );
 });
+
 tops.addEventListener("click", () => {
   getMovie(API);
 });
