@@ -57,11 +57,9 @@ body {
   gap: 40px;
 }
 .movie_card {
-  /* display: flex;
-  flex-direction: column; */
   align-items: center;
   width: 300px;
-  height: 600px;
+  height: 630px;
   border: 1px solid rgb(245, 242, 242);
   border-radius: 10px;
   background-color: #03131f;
