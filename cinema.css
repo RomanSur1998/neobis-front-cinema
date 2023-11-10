@@ -100,6 +100,8 @@ body {
 .navbar {
   /* width: 100%; */
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   justify-content: space-around;
   align-items: center;
   margin-top: 40px;
@@ -137,4 +139,17 @@ body {
   font-size: 15px;
   font-weight: 400;
   color: gray;
+}
+
+@media (max-width: 320px) {
+  .header_from {
+    flex-wrap: wrap;
+  }
+  .search {
+    width: 250px;
+  }
+  .header div {
+    width: 250px;
+    margin: 10px auto;
+  }
 }
