@@ -138,6 +138,13 @@ body {
   font-weight: 400;
   color: gray;
 }
+.icon {
+  cursor: pointer;
+}
+.active {
+  background-color: #fdb10b;
+  color: aliceblue;
+}
 
 @media (max-width: 320px) {
   .header_from {

@@ -6,12 +6,21 @@ const relize_for_month = document.querySelector(".reliz");
 const tops = document.querySelector(".top");
 const waiting = document.querySelector(".waiting");
 const block = document.querySelector(".block");
-
+const buttons = document.querySelectorAll(".nav_button");
 const API =
   "https://kinopoiskapiunofficial.tech/api/v2.2/films/top?type=TOP_100_POPULAR_FILMS&page=1";
 const SEARCH_API =
   "https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=";
 const API_KEY = "3d73b662-f1b3-4b82-9e6a-33a349d1d4dd";
+
+const MOUNTH_API =
+  "https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=";
+
+const MOUNTH_RELIZE =
+  "https://kinopoiskapiunofficial.tech/api/v2.1/films/releases?year=";
+
+const YEAR_RELIZE =
+  "https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=";
 
 function getParam(data) {
   if (data.films) {
@@ -23,9 +32,17 @@ function getParam(data) {
   }
 }
 
-Local();
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    buttons.forEach((btn) => btn.classList.remove("active"));
+    button.classList.add("active");
+  });
+});
+
+getLocal();
 
 getMovie(API);
+
 async function getMovie(url) {
   try {
     const response = await fetch(url, {
@@ -39,6 +56,12 @@ async function getMovie(url) {
     movieList(getParam(data));
   } catch (error) {
     console.log(error);
+  }
+}
+
+function getLocal() {
+  if (!localStorage.getItem("films")) {
+    localStorage.setItem("films", JSON.stringify([]));
   }
 }
 
@@ -69,6 +92,7 @@ function movieList(data) {
     year.textContent = elem.year;
     year.className = "yers";
     genre.textContent = elem.genres[0].genre;
+    icon.classList = "icon";
 
     icon.src = isFavorite(elem)
       ? "./assets/heart_fill.svg"
@@ -97,9 +121,13 @@ function isFavorite(elem) {
 
 function toggleFavorite(elem) {
   let data = JSON.parse(localStorage.getItem("films"));
-  const existingFilmIndex = data.findIndex(
-    (item) => item.filmId === elem.filmId
-  );
+  const existingFilmIndex = data.findIndex((item) => {
+    if (item.filmId) {
+      return item.filmId === elem.filmId;
+    } else {
+      return item.kinopoiskId === elem.kinopoiskId;
+    }
+  });
 
   if (existingFilmIndex !== -1) {
     data.splice(existingFilmIndex, 1);
@@ -120,16 +148,14 @@ form.addEventListener("submit", (event) => {
 
 moutnh.addEventListener("click", () => {
   let newMoutn = new Date().toLocaleString("en-US", { month: "long" });
-  console.log(new Date().getFullYear());
-  getMovie(
-    `https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=${new Date().getFullYear()}&month=${newMoutn}`
-  );
+
+  getMovie(`${MOUNTH_API}${new Date().getFullYear()}&month=${newMoutn}`);
 });
 
 relize_for_month.addEventListener("click", () => {
   let newMoutn = new Date().toLocaleString("en-US", { month: "long" });
   getMovie(
-    `https://kinopoiskapiunofficial.tech/api/v2.1/films/releases?year=${new Date().getFullYear()}&month=${newMoutn}&page=1`
+    `${MOUNTH_RELIZE}${new Date().getFullYear()}&month=${newMoutn}&page=1`
   );
 });
 
@@ -137,41 +163,8 @@ tops.addEventListener("click", () => {
   getMovie(API);
 });
 
-function Local(elem) {
-  if (elem) {
-    if (!localStorage.getItem("films")) {
-      localStorage.setItem("films", JSON.stringify([]));
-    }
-
-    let data = JSON.parse(localStorage.getItem("films"));
-    const existingFilmIndex = data.findIndex((item) => {
-      if (item.filmId) {
-        return item.filmId === elem.filmId;
-      } else {
-        return item.kinopoiskId === elem.kinopoiskId;
-      }
-    });
-
-    if (existingFilmIndex !== -1) {
-      data.splice(existingFilmIndex, 1);
-    } else {
-      data.push(elem);
-    }
-
-    localStorage.setItem("films", JSON.stringify(data));
-  } else {
-    if (!localStorage.getItem("films")) {
-      localStorage.setItem("films", JSON.stringify([]));
-    }
-  }
-}
-
 waiting.addEventListener("click", () => {
-  getMovie(
-    `https://kinopoiskapiunofficial.tech/api/v2.2/films/premieres?year=${
-      new Date().getFullYear() + 1
-    }&month=JANUARY`
-  );
+  getMovie(`${YEAR_RELIZE}${new Date().getFullYear() + 1}&month=JANUARY`);
 });
 
 block.addEventListener("click", () => {
